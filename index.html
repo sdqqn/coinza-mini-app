@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#6c5ce7">
+<title>Coinza</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f5f6fb;color:#17172b}
+button{font:inherit;cursor:pointer}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:88px}
+.header{background:linear-gradient(135deg,#6c5ce7,#8e7cff);color:#fff;padding:24px 20px 30px;border-radius:0 0 28px 28px}
+.logo{font-size:30px;font-weight:800;margin-bottom:18px}
+.hello{font-size:14px;opacity:.9}.name{font-size:22px;font-weight:700;margin-top:5px}
+.balance{margin-top:20px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:18px}
+.balance small{opacity:.85}.coins{font-size:30px;font-weight:800;margin-top:7px}
+.content{padding:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:#fff;border:0;border-radius:20px;padding:20px;text-align:right;box-shadow:0 5px 20px rgba(0,0,0,.05);min-height:145px}
+.card .icon{font-size:34px}.card h3{margin:12px 0 6px;font-size:17px}.card p{margin:0;color:#777;font-size:13px;line-height:1.5}
+.section{display:none;padding:18px}.section.active{display:block}
+.back{border:0;background:#fff;border-radius:12px;padding:9px 13px;margin-bottom:15px}
+.title{font-size:25px;font-weight:800;margin:5px 0 18px}
+.offer{background:#fff;border-radius:18px;padding:18px;margin-bottom:12px;box-shadow:0 4px 15px rgba(0,0,0,.05)}
+.offer h3{margin:0 0 7px}.offer p{margin:0 0 13px;color:#777;font-size:13px}
+.primary{background:#6c5ce7;color:#fff;border:0;border-radius:12px;padding:12px 16px;width:100%;font-weight:700}
+.notice{background:#fff;border-radius:18px;padding:22px;text-align:center;color:#666;line-height:1.7}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));z-index:10}
+.nav button{border:0;background:none;color:#777;font-size:12px;padding:5px 10px}.nav button.active{color:#6c5ce7;font-weight:700}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 18px;border-radius:14px;display:none;z-index:20;font-size:14px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="header">
+  <div class="logo">🪙 Coinza</div>
+  <div class="hello">مرحباً بك 👋</div>
+  <div class="name" id="userName">مستخدم Coinza</div>
+  <div class="balance">
+    <small>رصيدك الحالي</small>
+    <div class="coins"><span id="balance">0</span> Coins</div>
+  </div>
+</header>
+
+<main id="home" class="content">
+  <div class="grid">
+    <button class="card" onclick="openSection('tasks')">
+      <div class="icon">🎯</div><h3>المهام</h3><p>أنجز المهام واحصل على Coins.</p>
+    </button>
+    <button class="card" onclick="openSection('surveys')">
+      <div class="icon">📋</div><h3>الاستطلاعات</h3><p>شارك في الاستطلاعات المدفوعة.</p>
+    </button>
+    <button class="card" onclick="openSection('games')">
+      <div class="icon">🎮</div><h3>الألعاب والتطبيقات</h3><p>احصل على مكافآت من العروض.</p>
+    </button>
+    <button class="card" onclick="openSection('referral')">
+      <div class="icon">👥</div><h3>الإحالة</h3><p>ادعُ أصدقاءك واربح Coins.</p>
+    </button>
+  </div>
+</main>
+
+<section id="tasks" class="section">
+  <button class="back" onclick="goHome()">← الرئيسية</button>
+  <div class="title">🎯 المهام</div>
+  <div class="offer"><h3>المهام المتاحة</h3><p>سيتم هنا عرض المهام الحقيقية وربطها بنظام Coinza.</p><button class="primary" onclick="showToast('سيتم تفعيل المهام قريباً 🚀')">عرض المهام</button></div>
+</section>
+
+<section id="surveys" class="section">
+  <button class="back" onclick="goHome()">← الرئيسية</button>
+  <div class="title">📋 الاستطلاعات</div>
+  <div class="offer"><h3>استطلاعات مدفوعة</h3><p>سنربط هنا مزودي الاستطلاعات مثل CPX Research وBitLabs وinBrain.</p><button class="primary" onclick="showToast('سيتم ربط الاستطلاعات الحقيقية قريباً 🚀')">عرض الاستطلاعات</button></div>
+</section>
+
+<section id="games" class="section">
+  <button class="back" onclick="goHome()">← الرئيسية</button>
+  <div class="title">🎮 الألعاب والتطبيقات</div>
+  <div class="offer"><h3>Offerwall</h3><p>سيتم هنا عرض ألعاب وتطبيقات وعروض حسب دولة وجهاز المستخدم.</p><button class="primary" onclick="showToast('سيتم ربط عروض الألعاب والتطبيقات قريباً 🚀')">عرض العروض</button></div>
+</section>
+
+<section id="referral" class="section">
+  <button class="back" onclick="goHome()">← الرئيسية</button>
+  <div class="title">👥 الإحالة</div>
+  <div class="notice">
+    ادعُ أصدقاءك إلى Coinza واحصل على مكافآت.<br><br>
+    <button class="primary" onclick="shareReferral()">🔗 مشاركة رابط الإحالة</button>
+  </div>
+</section>
+
+<section id="wallet" class="section">
+  <button class="back" onclick="goHome()">← الرئيسية</button>
+  <div class="title">💰 المحفظة</div>
+  <div class="notice">رصيدك: <b><span id="walletBalance">0</span> Coins</b><br><br>سيتم إضافة نظام السحب والمحفظة بعد إنشاء الـBackend.</div>
+</section>
+
+<section id="profile" class="section">
+  <button class="back" onclick="goHome()">← الرئيسية</button>
+  <div class="title">👤 الملف الشخصي</div>
+  <div class="offer"><h3 id="profileName">مستخدم Coinza</h3><p id="profileInfo">بيانات Telegram ستظهر هنا عند فتح التطبيق من البوت.</p></div>
+</section>
+
+<nav class="nav">
+  <button id="navHome" class="active" onclick="goHome()">🏠<br>الرئيسية</button>
+  <button onclick="openSection('tasks')">🎯<br>المهام</button>
+  <button onclick="openSection('wallet')">💰<br>المحفظة</button>
+  <button onclick="openSection('profile')">👤<br>حسابي</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+</div>
+
+<script>
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+let balance = Number(localStorage.getItem('coinza_balance') || 0);
+
+if(tg){
+  tg.ready();
+  tg.expand();
+  const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
+  if(user){
+    const name = [user.first_name,user.last_name].filter(Boolean).join(' ');
+    if(name){
+      document.getElementById('userName').textContent=name;
+      document.getElementById('profileName').textContent=name;
+    }
+    document.getElementById('profileInfo').textContent='Telegram ID: '+user.id;
+  }
+}
+
+function updateBalance(){
+  document.getElementById('balance').textContent=balance;
+  document.getElementById('walletBalance').textContent=balance;
+}
+
+function openSection(id){
+  document.getElementById('home').style.display='none';
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+}
+
+function goHome(){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('home').style.display='block';
+  document.getElementById('navHome').classList.add('active');
+}
+
+function showToast(message){
+  const t=document.getElementById('toast');
+  t.textContent=message;t.style.display='block';
+  setTimeout(()=>t.style.display='none',2500);
+}
+
+function shareReferral(){
+  const username = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.username : '';
+  const bot='CoinzaBot';
+  const link='https://t.me/'+bot+'?start=ref_'+(username||'user');
+  if(tg && tg.openTelegramLink) tg.openTelegramLink('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('انضم إلى Coinza واربح Coins 🪙'));
+  else if(navigator.share) navigator.share({title:'Coinza',text:'انضم إلى Coinza واربح Coins 🪙',url:link});
+  else showToast(link);
+}
+updateBalance();
+</script>
+</body>
+</html>
